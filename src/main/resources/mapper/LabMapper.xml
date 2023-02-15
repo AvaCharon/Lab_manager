@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lab_manager.dao.LabMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+
+    <resultMap id="BaseResultMap" type="com.example.lab_manager.entity.bo.LabBO">
+        <id column="lab_id" property="lab_id" jdbcType="INTEGER"/>
+        <result column="adm_id" property="adm_id" jdbcType="INTEGER"/>
+        <result column="comp_id" property="comp_id" jdbcType="INTEGER"/>
+        <result column="building_id" property="building_id" jdbcType="INTEGER"/>
+        <result column="class_id" property="class_id" jdbcType="INTEGER"/>
+        <result column="user_id" property="user_id" jdbcType="INTEGER"/>
+        <result column="lab_addr" property="lab_addr" jdbcType="VARCHAR"/>
+        <result column="comp_num" property="comp_num" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="listLabs" resultMap="BaseResultMap">
+        select *
+        from lab
+    </select>
+
+    <select id="listLabsByAdmin" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from lab
+        where adm_id = #{adm_id}
+    </select>
+
+    <select id="getLabById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from lab
+        where lab_id = #{lab_id}
+    </select>
+
+    <insert id="saveLab" parameterType="com.example.lab_manager.entity.Lab">
+        insert into lab(adm_id, comp_id, building_id, lab_addr, comp_num)
+        values (#{adm_id}, #{comp_id}, #{building_id}, #{lab_addr}, #{comp_num});
+    </insert>
+
+    <update id="updateLab" parameterType="com.example.lab_manager.entity.Lab">
+        update lab
+        set adm_id    = #{adm_id},
+            comp_id    = #{comp_id},
+            building_id = #{building_id},
+            lab_addr = #{lab_addr},
+            comp_num = #{comp_num}
+        where lab_id = #{lab_id};
+    </update>
+
+    <update id="updateApplyLab" parameterType="com.example.lab_manager.entity.Lab">
+        update lab
+        set adm_id    = #{adm_id},
+            comp_id    = #{comp_id},
+            building_id = #{building_id},
+            lab_addr = #{lab_addr},
+            comp_num = #{comp_num},
+            status = #{status},
+            class_id = #{class_id},
+            user_id = #{user_id}
+        where lab_id = #{lab_id};
+    </update>
+
+    <update id="updateApplyStatus" parameterType="com.example.lab_manager.entity.Lab">
+        update lab
+        set status = #{status}
+        where lab_id = #{lab_id};
+    </update>
+
+
+    <update id="unpassApplyStatus" parameterType="com.example.lab_manager.entity.Lab">
+        update lab
+        set status = #{status},
+            class_id = NULL,
+            user_id = NULL
+        where lab_id = #{lab_id};
+    </update>
+
+    <delete id="deleteLab" parameterType="java.lang.Integer">
+        delete
+        from lab
+        where lab_id = #{lab_id}
+    </delete>
+
+
+</mapper>

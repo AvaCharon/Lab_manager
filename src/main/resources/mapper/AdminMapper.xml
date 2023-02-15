@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lab_manager.dao.AdminMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+    <resultMap id="BaseResultMap" type="com.example.lab_manager.entity.Admin">
+        <id column="adm_id" property="adm_id" jdbcType="INTEGER"/>
+        <result column="teacher_id" property="teacher_id" jdbcType="INTEGER"/>
+        <result column="a_password" property="a_password" jdbcType="CHAR"/>
+    </resultMap>
+
+    <select id="listAdmins" resultMap="BaseResultMap">
+        select *
+        from adm
+    </select>
+
+
+    <select id="getAdminById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from lab.adm
+        where adm_id = #{adm_id}
+    </select>
+
+    <insert id="saveAdmin" parameterType="com.example.lab_manager.entity.Admin">
+        insert into adm(teacher_id, a_password)
+        values (#{teacher_id}, #{a_password})
+    </insert>
+
+    <update id="updateAdmin" parameterType="com.example.lab_manager.entity.Admin">
+        update adm
+        set a_password=#{a_password}
+        where teacher_id = #{teacher_id}
+    </update>
+
+    <delete id="deleteAdmin" parameterType="java.lang.Integer">
+        delete
+        from adm
+        where teacher_id = #{teacher_id}
+    </delete>
+
+</mapper>

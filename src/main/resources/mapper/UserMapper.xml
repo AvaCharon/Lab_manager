@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lab_manager.dao.UserMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+    <resultMap id="BaseResultMap" type="com.example.lab_manager.entity.User">
+        <id column="user_id" property="user_id" jdbcType="INTEGER"/>
+        <result column="teacher_id" property="teacher_id" jdbcType="INTEGER"/>
+        <result column="u_password" property="u_password" jdbcType="CHAR"/>
+    </resultMap>
+
+    <select id="listUsers" resultMap="BaseResultMap">
+        select *
+        from user_
+    </select>
+
+    <select id="getUserById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from user_
+        where user_id = #{user_id}
+    </select>
+
+    <select id="getUserByTeacherId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from user_
+        where teacher_id = #{teacher_id}
+    </select>
+
+    <insert id="saveUser" parameterType="com.example.lab_manager.entity.User">
+        insert into user_(teacher_id, u_password)
+        values (#{teacher_id}, #{u_password})
+    </insert>
+
+    <update id="updateUser" parameterType="com.example.lab_manager.entity.User">
+        update user_
+        set u_password=#{u_password}
+        where teacher_id = #{teacher_id}
+    </update>
+
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete
+        from user_
+        where teacher_id = #{teacher_id}
+    </delete>
+</mapper>

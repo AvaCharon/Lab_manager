@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lab_manager.dao.BuildingMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+    <resultMap id="BaseResultMap" type="com.example.lab_manager.entity.Building">
+        <id column="building_id" property="building_id" jdbcType="INTEGER"/>
+        <result column="building_name" property="building_name" jdbcType="CHAR"/>
+    </resultMap>
+
+    <select id="listBuildings" resultMap="BaseResultMap">
+        select *
+        from building
+    </select>
+
+    <select id="getBuildingById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from building
+        where building_id = #{building_id}
+    </select>
+
+    <insert id="saveBuilding" parameterType="com.example.lab_manager.entity.Building">
+        insert into building(building_id, building_name)
+        values (#{building_id}, #{building_name})
+    </insert>
+
+    <update id="updateBuilding" parameterType="com.example.lab_manager.entity.Building">
+        update building
+        set building_name=#{building_name}
+        where building_id = #{building_id}
+    </update>
+
+    <delete id="deleteBuilding" parameterType="java.lang.Integer">
+        delete
+        from building
+        where building_id = #{building_id}
+    </delete>
+</mapper>

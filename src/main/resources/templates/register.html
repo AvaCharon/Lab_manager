@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>实验室管理系统</title>
+    <meta name="keywords" content="LAB+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="LAB+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <script>if (window.top !== window.self) {
+        window.top.location = window.location;
+    }</script>
+</head>
+
+<body class="gray-bg">
+
+<div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">LAB+</h1>
+
+        </div>
+        <h3>欢迎注册 实验室管理系统账户</h3>
+        <p>创建一个新账户</p>
+        <form class="m-t">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="请输入教师号" id="teacherNo" name="teacherNo" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="请输入密码" id="teacherPwd" name="teacherPwd" required=""
+                >
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="请再次输入密码" id="L_repass" name="repass" required=""
+                >
+            </div>
+            <button type="button" onclick="register()" class="btn btn-primary block full-width m-b">注 册</button>
+
+            <p class="text-muted text-center"><small>已经有账户了？</small><a th:href="@{/}">点此登录</a>
+            </p>
+
+        </form>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+<script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+<!-- iCheck -->
+<script src="js/plugins/iCheck/icheck.min.js"></script>
+
+<script>
+    function register() {
+
+        var teacherNo = $('#teacherNo').val();
+        var teacherPwd = $('#teacherPwd').val();
+        var repass = $('#L_repass').val();
+
+        if (teacherPwd != repass) {
+            alert("输入的两次密码不相同！");
+            return false;
+        } else if (teacherNo == null && teacherNo == "") {
+            alert("教师号不能为空！")
+        } else if (teacherPwd == null && teacherPwd == "") {
+            alert("密码不能为空！")
+        } else if (repass == null && repass == "") {
+            alert("再次输入密码不能为空！")
+        } else {
+            $.ajax({
+                type: "post",
+                url: "http://localhost:8080/user/userAdd",
+                async: false,
+                dataType: 'json',
+                data: {
+                    teacherNo: teacherNo,
+                    teacherPwd: teacherPwd
+                },
+                success: function (res) {
+                    if (res.data == "success") {
+                        alert("注册成功！");
+                        location.href = "http://localhost:8080/";
+                    } else {
+                        alert(res.msg);
+                    }
+                },
+                error: function () {
+                    alert("未填写合法的信息！");
+                }
+            })
+
+        }
+
+   }
+
+</script>
+
+
+<script>
+    document.getElementById("file").addEventListener("change", function () {
+        //console.log("change==>");
+        /**
+         * 图片上传 formdata进行数据传输！
+         * @type {jQuery|HTMLElement}
+         */
+        $ = layui.jquery;
+
+        var url = $('#file')[0].files[0];
+        //console.log("==>"+url)
+        var form = new FormData();
+        form.set('file', url);
+
+        $.ajax({
+            type: "post",
+            url: "http://localhost:9527/sysLab/student/fileUpload",
+            async: false,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: form,
+            success: function (res) {
+                //console.log("res==>"+res);
+                if (res.data == "success") {
+                    layer.alert("上传成功！", {
+                        icon: 6
+                    })
+                    $('#imgUrl').val(res.fileUrl);
+                } else {
+                    layer.alert("服务出错，请联系管理员！", {
+                        icon: 6
+                    })
+                }
+
+            },
+            error: function () {
+                layer.alert("上传失败，请联系管理员！", {
+                    icon: 6
+                })
+            }
+        });
+
+    });
+
+
+</script>
+
+</body>
+
+</html>

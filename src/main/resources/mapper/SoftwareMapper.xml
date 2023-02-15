@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lab_manager.dao.SoftwareMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+    <resultMap id="BaseResultMap" type="com.example.lab_manager.entity.Software">
+        <id column="software_id" property="software_id" jdbcType="INTEGER"/>
+        <result column="software_name" property="software_name" jdbcType="CHAR"/>
+        <result column="edition" property="edition" jdbcType="CHAR"/>
+    </resultMap>
+
+    <select id="listSoftware" resultMap="BaseResultMap">
+        select *
+        from software
+    </select>
+
+    <select id="getSoftwareById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from software
+        where software_id = #{software_id}
+    </select>
+
+    <insert id="saveSoftware" parameterType="com.example.lab_manager.entity.Software">
+        insert into software(software_name, edition)
+        values (#{software_name}, #{edition})
+    </insert>
+
+    <update id="updateSoftware" parameterType="com.example.lab_manager.entity.Software">
+        update software
+        set edition=#{edition}
+        where software_id = #{software_id}
+    </update>
+
+    <delete id="deleteSoftware" parameterType="java.lang.Integer">
+        delete
+        from software
+        where software_id = #{software_id}
+    </delete>
+</mapper>

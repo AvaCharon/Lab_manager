@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>实验室管理系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/font.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/xadmin.css}">
+    <!-- <link rel="stylesheet" href="./css/theme5.css"> -->
+    <script type="text/javascript" th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form">
+             <input type="hidden" name="lab_id" th:value="${lab.lab_id}">
+            <div class="layui-form-item">
+                <label for="adm_id" class="layui-form-label">
+                    <span class="x-red">*</span>实验室管理员</label>
+                <div class="layui-input-inline">
+                    <select class="form-control m-b" id="adm_id" name="adm_id" th:object="${adminList}" lay-verify="adm_id">
+                        <option>请选择</option>
+                        <option th:each="a:${adminList}" th:value="${a.adm_id}" th:text="${a.adm_id}"></option>
+                    </select>
+                <div class="layui-form-mid layui-word-aux"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="comp_id" class="layui-form-label">
+                    <span class="x-red">*</span>电脑配置编号</label>
+                <div class="layui-input-inline">
+                    <select class="form-control m-b" id="comp_id" name="comp_id" th:object="${compList}" lay-verify="comp_id">
+                        <option>请选择</option>
+                        <option th:each="c:${compList}" th:value="${c.comp_id}" th:text="${c.comp_id}"></option>
+                    </select>
+                <div class="layui-form-mid layui-word-aux"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="building_id" class="layui-form-label">
+                    <span class="x-red">*</span>教学楼编号</label>
+                <div class="layui-input-inline">
+                    <select class="form-control m-b" id="building_id" name="building_id" th:object="${buildingList}" lay-verify="building_id">
+                        <option>请选择</option>
+                        <option th:each="b:${buildingList}" th:value="${b.building_id}" th:text="${b.building_id}"></option>
+                    </select>
+                <div class="layui-form-mid layui-word-aux"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="lab_addr" class="layui-form-label">
+                    <span class="x-red">*</span>实验室地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="lab_addr" name="lab_addr" th:value="${lab.lab_addr}" required="required" lay-verify="lab_addr"
+                           autocomplete="off"
+                           class="layui-input"></div>
+                <div class="layui-form-mid layui-word-aux"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="comp_num" class="layui-form-label">
+                    <span class="x-red">*</span>电脑台数</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="comp_num" name="comp_num" required="required" lay-verify="comp_num"
+                           autocomplete="off"
+                           class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <button type="submit" class="layui-btn" lay-filter="add" lay-submit="">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layer', 'jquery'],
+        function () {
+            $ = layui.jquery;
+            var form = layui.form,
+                layer = layui.layer;
+
+
+            //自定义验证规则
+            form.verify({
+
+            });
+
+            //监听提交
+            form.on('submit(add)',
+                function (data) {
+                    //console.log(data);
+                    $.ajax({
+                        type: "post",
+                        url: "http://localhost:8080/lab/labEdit",
+                        async: false,
+                        dataType: 'json',
+                        data: {
+                            lab_id: data.field.lab_id,
+                            adm_id: data.field.adm_id,
+                            comp_id: data.field.comp_id,
+                            building_id: data.field.building_id,
+                            lab_addr: data.field.lab_addr,
+                            comp_num: data.field.comp_num
+                        },
+                        success: function (res) {
+                            //console.log("======" + res.data);
+                            if (res.data == "success") {
+                                //console.log("enter ==>")
+                                layer.alert("修改成功", {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        //关闭当前frame
+                                        xadmin.close();
+
+                                        // 可以对父窗口进行刷新
+                                        xadmin.father_reload();
+                                    });
+                            } else {
+                                layer.alert("用户已存在！", {
+                                    icon: 6
+                                });
+                            }
+                        },
+                        error: function (res) {
+                            layer.alert("修改失败", {
+                                icon: 6
+                            });
+                        }
+                    })
+                    return false;
+                });
+        });
+</script>
+
+</body>
+
+</html>
